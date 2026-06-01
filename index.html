@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>مكانك | فتح المتجر</title>
-    <meta name="description" content="افتح المتجر داخل تطبيق مكانك" />
+    <title>مكانك | فتح التطبيق</title>
+    <meta name="description" content="افتح المتجر أو المنتج داخل تطبيق مكانك" />
     <style>
       :root {
         color-scheme: light;
@@ -76,7 +76,7 @@
     <main>
       <div class="logo">م</div>
       <h1 id="title">فتح تطبيق مكانك</h1>
-      <p id="message">جارٍ تجهيز رابط المتجر...</p>
+      <p id="message">جارٍ تجهيز الرابط...</p>
       <a id="openLink" class="button" href="makanak://shops/">افتح في التطبيق</a>
       <p class="hint" id="hint"></p>
     </main>
@@ -90,20 +90,44 @@
 
         const segments = window.location.pathname.split('/').filter(Boolean);
         const params = new URLSearchParams(window.location.search);
-        const pathShopId = segments.length === 2 && segments[0] === 'shops' ? segments[1] : '';
+
+        const pathShopId =
+          segments.length === 2 && segments[0] === 'shops' ? segments[1] : '';
+        const pathProductShopId =
+          segments.length === 4 && segments[0] === 'shops' && segments[2] === 'products'
+            ? segments[1]
+            : '';
+        const pathProductId =
+          segments.length === 4 && segments[0] === 'shops' && segments[2] === 'products'
+            ? segments[3]
+            : '';
+
         const queryShopId = params.get('shopId') || '';
-        const shopId = pathShopId || queryShopId;
+        const queryProductId = params.get('productId') || '';
+
+        const shopId = pathProductShopId || pathShopId || queryShopId;
+        const productId = pathProductId || queryProductId;
+        const isProductLink = Boolean(shopId && productId);
 
         if (!shopId) {
           title.textContent = 'الرابط غير صحيح';
-          message.textContent = 'تأكد من رابط المتجر ثم حاول مرة أخرى.';
+          message.textContent = 'تأكد من رابط المتجر أو المنتج ثم حاول مرة أخرى.';
           openLink.style.display = 'none';
           return;
         }
 
-        const appUrl = 'makanak://shops/' + encodeURIComponent(shopId);
-        title.textContent = 'فتح المتجر داخل تطبيق مكانك';
-        message.innerHTML = 'اضغط الزر لفتح المتجر داخل التطبيق.<br><code>' + shopId + '</code>';
+        const appUrl = isProductLink
+          ? 'makanak://shops/' + encodeURIComponent(shopId) + '/products/' + encodeURIComponent(productId)
+          : 'makanak://shops/' + encodeURIComponent(shopId);
+
+        title.textContent = isProductLink
+          ? 'فتح المنتج داخل تطبيق مكانك'
+          : 'فتح المتجر داخل تطبيق مكانك';
+
+        message.innerHTML = isProductLink
+          ? 'اضغط الزر لفتح المنتج داخل التطبيق.<br><code>' + productId + '</code>'
+          : 'اضغط الزر لفتح المتجر داخل التطبيق.<br><code>' + shopId + '</code>';
+
         openLink.href = appUrl;
         hint.textContent = 'لو لم يفتح التطبيق تلقائيًا، تأكد أن تطبيق مكانك مثبت على جهازك.';
 
