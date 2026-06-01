@@ -14,11 +14,7 @@
         --muted: #5f6f82;
         --card: #ffffff;
       }
-
-      * {
-        box-sizing: border-box;
-      }
-
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         min-height: 100vh;
@@ -28,7 +24,6 @@
         background: radial-gradient(circle at top, #e8f1ff, var(--bg));
         color: var(--text);
       }
-
       main {
         width: min(92vw, 460px);
         background: var(--card);
@@ -37,7 +32,6 @@
         text-align: center;
         box-shadow: 0 20px 60px rgb(16 32 51 / 12%);
       }
-
       .logo {
         width: 74px;
         height: 74px;
@@ -50,18 +44,8 @@
         font-size: 34px;
         font-weight: 800;
       }
-
-      h1 {
-        margin: 0 0 10px;
-        font-size: 24px;
-      }
-
-      p {
-        margin: 0 0 18px;
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
+      h1 { margin: 0 0 10px; font-size: 24px; }
+      p { margin: 0 0 18px; color: var(--muted); line-height: 1.7; }
       a.button {
         display: inline-flex;
         width: 100%;
@@ -75,13 +59,7 @@
         font-weight: 700;
         margin-top: 8px;
       }
-
-      .hint {
-        margin-top: 16px;
-        font-size: 13px;
-        color: var(--muted);
-      }
-
+      .hint { margin-top: 16px; font-size: 13px; color: var(--muted); }
       code {
         direction: ltr;
         display: inline-block;
@@ -111,8 +89,10 @@
         const hint = document.getElementById('hint');
 
         const segments = window.location.pathname.split('/').filter(Boolean);
-        const isShopLink = segments.length === 2 && segments[0] === 'shops';
-        const shopId = isShopLink ? segments[1] : '';
+        const params = new URLSearchParams(window.location.search);
+        const pathShopId = segments.length === 2 && segments[0] === 'shops' ? segments[1] : '';
+        const queryShopId = params.get('shopId') || '';
+        const shopId = pathShopId || queryShopId;
 
         if (!shopId) {
           title.textContent = 'الرابط غير صحيح';
