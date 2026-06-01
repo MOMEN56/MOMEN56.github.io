@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>مكانك | فتح المتجر</title>
+    <meta name="description" content="افتح المتجر داخل تطبيق مكانك" />
+    <style>
+      :root {
+        color-scheme: light;
+        --primary: #004aad;
+        --bg: #f4f7fb;
+        --text: #102033;
+        --muted: #5f6f82;
+        --card: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #e8f1ff, var(--bg));
+        color: var(--text);
+      }
+
+      main {
+        width: min(92vw, 460px);
+        background: var(--card);
+        border-radius: 24px;
+        padding: 28px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgb(16 32 51 / 12%);
+      }
+
+      .logo {
+        width: 74px;
+        height: 74px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 18px;
+        background: var(--primary);
+        color: white;
+        font-size: 34px;
+        font-weight: 800;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 24px;
+      }
+
+      p {
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      a.button {
+        display: inline-flex;
+        width: 100%;
+        min-height: 52px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        background: var(--primary);
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        margin-top: 8px;
+      }
+
+      .hint {
+        margin-top: 16px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      code {
+        direction: ltr;
+        display: inline-block;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        background: #eef3fb;
+        border-radius: 10px;
+        padding: 4px 8px;
+        color: #23364d;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="logo">م</div>
+      <h1 id="title">فتح تطبيق مكانك</h1>
+      <p id="message">جارٍ تجهيز رابط المتجر...</p>
+      <a id="openLink" class="button" href="makanak://shops/">افتح في التطبيق</a>
+      <p class="hint" id="hint"></p>
+    </main>
+
+    <script>
+      (function () {
+        const title = document.getElementById('title');
+        const message = document.getElementById('message');
+        const openLink = document.getElementById('openLink');
+        const hint = document.getElementById('hint');
+
+        const segments = window.location.pathname.split('/').filter(Boolean);
+        const isShopLink = segments.length === 2 && segments[0] === 'shops';
+        const shopId = isShopLink ? segments[1] : '';
+
+        if (!shopId) {
+          title.textContent = 'الرابط غير صحيح';
+          message.textContent = 'تأكد من رابط المتجر ثم حاول مرة أخرى.';
+          openLink.style.display = 'none';
+          return;
+        }
+
+        const appUrl = 'makanak://shops/' + encodeURIComponent(shopId);
+        title.textContent = 'فتح المتجر داخل تطبيق مكانك';
+        message.innerHTML = 'اضغط الزر لفتح المتجر داخل التطبيق.<br><code>' + shopId + '</code>';
+        openLink.href = appUrl;
+        hint.textContent = 'لو لم يفتح التطبيق تلقائيًا، تأكد أن تطبيق مكانك مثبت على جهازك.';
+
+        setTimeout(function () {
+          window.location.href = appUrl;
+        }, 350);
+      })();
+    </script>
+  </body>
+</html>
